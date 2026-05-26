@@ -48,7 +48,6 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        /* Linha decorativa colorida embaixo do cabeçalho */
         .header-logos::after {
             content: '';
             position: absolute;
@@ -68,27 +67,9 @@
             justify-content: flex-end;
         }
 
-        .logo-placeholder {
-            width: 100%;
-            max-width: 280px;
-            height: 75px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f8f9fa;
-            border: 2px dashed #ced4da;
-            border-radius: 6px;
-            color: #6c757d;
-            font-weight: 600;
-            font-size: 0.9em;
-            text-align: center;
-            padding: 0 15px;
-            box-sizing: border-box;
-        }
-
-        .logo-placeholder img {
+        .logo-img {
             max-width: 100%;
-            max-height: 100%;
+            max-height: 75px;
             object-fit: contain;
         }
 
@@ -116,6 +97,55 @@
             font-size: 1.15em;
             max-width: 700px;
             margin: 0 auto;
+        }
+
+        /* Dados do Participante */
+        .participant-info {
+            background-color: var(--gov-surface);
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid var(--gov-border);
+            border-left: 6px solid var(--gov-blue-dark);
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .participant-info h3 {
+            margin-top: 0;
+            color: var(--gov-blue-dark);
+            margin-bottom: 20px;
+        }
+
+        .participant-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group-info label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--gov-blue-dark);
+        }
+
+        .form-group-info input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--gov-border);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1em;
+            box-sizing: border-box;
+            background-color: #fafbfc;
+            transition: border-color 0.2s;
+        }
+
+        .form-group-info input:focus {
+            outline: none;
+            border-color: var(--gov-blue);
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(19, 81, 180, 0.15);
         }
 
         /* Accordion */
@@ -289,7 +319,7 @@
             box-sizing: border-box;
         }
 
-        /* Botão de Envio */
+        /* Botão de Envio e Loading */
         .btn-submit {
             display: block;
             width: 100%;
@@ -311,6 +341,35 @@
             transform: translateY(-2px);
         }
 
+        .btn-submit:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        #loadingMessage {
+            display: none;
+            text-align: center;
+            margin-top: 15px;
+            color: var(--gov-blue);
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        #successMessage {
+            display: none;
+            text-align: center;
+            margin-top: 15px;
+            color: var(--gov-green);
+            font-weight: bold;
+            font-size: 1.2em;
+            background-color: #EBFBEE;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--gov-green);
+        }
+
         /* Responsividade */
         @media (max-width: 768px) {
             .header-logos {
@@ -322,30 +381,23 @@
                 width: 100%;
                 justify-content: center !important;
             }
+            .participant-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Linha Azul Fina no Topo Extremo -->
     <div class="linha-topo-azul"></div>
 
-    <!-- Cabeçalho Limpo com Espaço para Duas Imagens -->
+    <!-- Imagens Hospedadas no GitHub -->
     <div class="header-logos">
-        <!-- Espaço da Esquerda (Ex: Logo MDA / DATER) -->
         <div class="logo-container">
-            <div class="logo-placeholder">
-                <!-- Para inserir a imagem real no futuro, basta remover o texto abaixo e colocar: <img src="link_da_imagem.png" alt="Logo 1"> -->
-                <span>[Espaço para Imagem 1]</span>
-            </div>
+            <img src="ater.png" alt="Logo ATER" class="logo-img">
         </div>
-
-        <!-- Espaço da Direita (Ex: Logo Parceiro / Evento) -->
         <div class="logo-container right">
-            <div class="logo-placeholder">
-                <!-- Para inserir a imagem real no futuro, basta remover o texto abaixo e colocar: <img src="link_da_imagem.png" alt="Logo 2"> -->
-                <span>[Espaço para Imagem 2]</span>
-            </div>
+            <img src="mda.png" alt="Logo MDA" class="logo-img">
         </div>
     </div>
 
@@ -356,13 +408,35 @@
         </div>
 
         <form id="formDinamica">
+            
+            <div class="participant-info">
+                <h3>Identificação</h3>
+                <div class="participant-grid">
+                    <div class="form-group-info">
+                        <label for="Nome">Nome Completo:</label>
+                        <input type="text" id="Nome" name="Nome" required placeholder="Digite seu nome">
+                    </div>
+                    <div class="form-group-info">
+                        <label for="Coordenacao">Coordenação Vinculada:</label>
+                        <input type="text" id="Coordenacao" name="Coordenacao" required placeholder="Ex: CGFE, CGMI, etc...">
+                    </div>
+                </div>
+            </div>
+
             <div id="accordion-container"></div>
-            <button type="submit" class="btn-submit">Finalizar e Enviar Análise</button>
+            
+            <button type="submit" class="btn-submit" id="btnSubmit">Finalizar e Enviar Análise</button>
+            <div id="loadingMessage">Enviando dados... Aguarde.</div>
+            <div id="successMessage">Análise enviada com sucesso! Obrigado pela contribuição.</div>
         </form>
     </div>
 
     <script>
-        // Os 9 desafios mapeados conforme solicitado
+        // =========================================================
+        // ATENÇÃO: COLE AQUI A URL GERADA NO GOOGLE APPS SCRIPT
+        // =========================================================
+        const scriptURL = 'COLE_AQUI_A_SUA_URL_DO_APP_SCRIPT'; 
+
         const desafios = [
             "Marco Legal",
             "Conjuntura política",
@@ -377,7 +451,6 @@
 
         const container = document.getElementById('accordion-container');
 
-        // Função para atualizar o texto e a cor com base no valor do slider
         function atualizarTextoSlider(valor, id) {
             const div = document.getElementById(`texto_slider_${id}`);
             if (valor < 35) {
@@ -395,7 +468,6 @@
             }
         }
 
-        // Gerador automático das caixas de desafio
         desafios.forEach((tema, index) => {
             const id = index + 1;
             const div = document.createElement('div');
@@ -405,7 +477,7 @@
                 <button type="button" class="accordion-header">${id}. ${tema}</button>
                 <div class="accordion-content">
                     <div class="info-box">
-                        <strong>Síntese do Relatório:</strong> Insira aqui o resumo do que o Instituto Escolhas diagnosticou sobre o desafio de <em>${tema}</em>. (Edite este bloco conforme o texto original do documento).
+                        <strong>Síntese do Relatório:</strong> Insira aqui o resumo do que o Instituto Escolhas diagnosticou sobre o desafio de <em>${tema}</em>.
                     </div>
 
                     <div class="slider-container">
@@ -433,23 +505,19 @@
             container.appendChild(div);
         });
 
-        // Lógica do Acordeão (Abrir e Fechar)
         const headers = document.querySelectorAll('.accordion-header');
         
         headers.forEach(header => {
             header.addEventListener('click', function() {
                 const item = this.parentElement;
                 const content = this.nextElementSibling;
-                
                 const isActive = item.classList.contains('active');
                 
-                // Fecha todas as outras caixas (comportamento padrão de acordeão)
                 document.querySelectorAll('.accordion-item').forEach(i => {
                     i.classList.remove('active');
                     i.querySelector('.accordion-content').style.maxHeight = null;
                 });
 
-                // Se não estava ativo, abre
                 if (!isActive) {
                     item.classList.add('active');
                     content.style.maxHeight = content.scrollHeight + 150 + "px"; 
@@ -457,12 +525,46 @@
             });
         });
 
-        // Evento de Envio do Formulário
-        document.getElementById('formDinamica').addEventListener('submit', (e) => {
+        // Lógica de Envio para a Planilha do Google
+        const form = document.getElementById('formDinamica');
+        const btnSubmit = document.getElementById('btnSubmit');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const successMessage = document.getElementById('successMessage');
+
+        form.addEventListener('submit', e => {
             e.preventDefault();
-            alert('Análise finalizada com sucesso! Este botão enviará os dados estruturados para a coordenação.');
+            
+            if (scriptURL === 'https://script.google.com/macros/s/AKfycbxBq03I0u9hgTNPoArvAT1gxiV1MqcQmNvVgk45TC-AeWnR-JgbY14FOsslsd1J2gCY/exec') {
+                alert("Atenção: Você precisa colar a URL do Google Apps Script no código HTML para que o envio funcione.");
+                return;
+            }
+
+            btnSubmit.disabled = true;
+            loadingMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+
+            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+                .then(response => {
+                    loadingMessage.style.display = 'none';
+                    successMessage.style.display = 'block';
+                    form.reset(); 
+                    
+                    for(let i=1; i<=9; i++) {
+                        atualizarTextoSlider(50, i);
+                    }
+                    
+                    setTimeout(() => {
+                        btnSubmit.disabled = false;
+                        successMessage.style.display = 'none';
+                    }, 5000);
+                })
+                .catch(error => {
+                    console.error('Erro!', error.message);
+                    alert("Ocorreu um erro ao enviar. Tente novamente.");
+                    btnSubmit.disabled = false;
+                    loadingMessage.style.display = 'none';
+                });
         });
     </script>
-
 </body>
 </html>
