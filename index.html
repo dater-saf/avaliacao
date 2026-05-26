@@ -165,15 +165,18 @@
             border: none;
             border-left: 6px solid var(--gov-blue);
             padding: 20px 25px;
-            text-align: left;
             font-size: 1.15em;
             font-weight: 700;
             color: var(--gov-blue-dark);
             cursor: pointer;
             display: flex;
-            justify-content: space-between;
             align-items: center;
             transition: all 0.2s ease;
+        }
+
+        .accordion-header-title {
+            flex-grow: 1;
+            text-align: left;
         }
 
         .accordion-header:hover {
@@ -260,7 +263,7 @@
             box-shadow: 0 0 0 3px rgba(19, 81, 180, 0.15);
         }
 
-        /* Slider Customizado - Escala de 10 */
+        /* Slider Customizado */
         .slider-container {
             padding: 10px 0;
             background-color: #fff;
@@ -317,6 +320,65 @@
             display: inline-block;
             width: 100%;
             box-sizing: border-box;
+        }
+
+        /* PAINEL DE RESUMO GERAL */
+        .summary-panel {
+            background-color: var(--gov-surface);
+            padding: 30px 25px;
+            border-radius: 8px;
+            border: 1px solid var(--gov-border);
+            margin-top: 40px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            border-top: 6px solid var(--gov-green);
+        }
+        
+        .summary-panel h3 {
+            color: var(--gov-blue-dark);
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 1.4em;
+            text-align: center;
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+        }
+
+        .summary-item-title {
+            width: 40%;
+            font-weight: 600;
+            color: var(--gov-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .summary-item-bar-bg {
+            width: 50%;
+            height: 12px;
+            background-color: #e9ecef;
+            border-radius: 6px;
+            margin: 0 15px;
+            overflow: hidden;
+        }
+
+        .summary-item-bar-fill {
+            height: 100%;
+            width: 50%;
+            background-color: #E67700;
+            transition: width 0.4s ease, background-color 0.4s ease;
+        }
+
+        .summary-item-value {
+            width: 10%;
+            font-weight: bold;
+            text-align: right;
+            color: #E67700;
+            font-size: 1.1em;
         }
 
         /* Botão de Envio e Loading */
@@ -384,6 +446,16 @@
             .participant-grid {
                 grid-template-columns: 1fr;
             }
+            .summary-item {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-bottom: 20px;
+            }
+            .summary-item-title, .summary-item-bar-bg, .summary-item-value {
+                width: 100%;
+                margin: 5px 0;
+                text-align: left;
+            }
         }
     </style>
 </head>
@@ -391,7 +463,6 @@
 
     <div class="linha-topo-azul"></div>
 
-    <!-- Imagens Hospedadas no GitHub -->
     <div class="header-logos">
         <div class="logo-container">
             <img src="ater.png" alt="Logo ATER" class="logo-img">
@@ -425,6 +496,12 @@
 
             <div id="accordion-container"></div>
             
+            <!-- PAINEL DE RESUMO -->
+            <div class="summary-panel" id="summary-panel">
+                <h3>Visão Geral da sua Concordância</h3>
+                <div id="summary-content"></div>
+            </div>
+
             <button type="submit" class="btn-submit" id="btnSubmit">Finalizar e Enviar Análise</button>
             <div id="loadingMessage">Enviando dados... Aguarde.</div>
             <div id="successMessage">Análise enviada com sucesso! Obrigado pela contribuição.</div>
@@ -432,9 +509,6 @@
     </div>
 
     <script>
-        // =========================================================
-        // URL DO GOOGLE APPS SCRIPT CONFIGURADA
-        // =========================================================
         const scriptURL = 'https://script.google.com/macros/s/AKfycbxBq03I0u9hgTNPoArvAT1gxiV1MqcQmNvVgk45TC-AeWnR-JgbY14FOsslsd1J2gCY/exec'; 
 
         const desafios = [
@@ -450,34 +524,57 @@
         ];
 
         const container = document.getElementById('accordion-container');
+        const summaryContainer = document.getElementById('summary-content');
 
-        // Função ajustada para escala de 1 a 10
+        // Lógica unificada para atualizar Slider e Painel de Resumo
         function atualizarTextoSlider(valor, id) {
             const div = document.getElementById(`texto_slider_${id}`);
-            const nota = parseInt(valor);
+            const sumFill = document.getElementById(`summary_fill_${id}`);
+            const sumVal = document.getElementById(`summary_val_${id}`);
             
+            const nota = parseInt(valor);
+            let corHex = "";
+            let bgHex = "";
+
+            // Definição das Cores
             if (nota <= 3) {
+                corHex = "#C92A2A"; // Vermelho
+                bgHex = "#FFF5F5";
                 div.textContent = `Nota ${nota} - Discordo do diagnóstico`;
-                div.style.color = "#C92A2A"; 
-                div.style.backgroundColor = "#FFF5F5";
             } else if (nota <= 7) {
+                corHex = "#E67700"; // Amarelo
+                bgHex = "#FFF9DB";
                 div.textContent = `Nota ${nota} - Concordo Parcialmente (com ressalvas)`;
-                div.style.color = "#E67700"; 
-                div.style.backgroundColor = "#FFF9DB";
             } else {
+                corHex = "#00824A"; // Verde
+                bgHex = "#EBFBEE";
                 div.textContent = `Nota ${nota} - Concordo Totalmente com o relatório`;
-                div.style.color = "#00824A"; 
-                div.style.backgroundColor = "#EBFBEE";
+            }
+
+            // Atualiza cores do texto abaixo do slider
+            div.style.color = corHex;
+            div.style.backgroundColor = bgHex;
+
+            // Atualiza o Painel de Resumo lá embaixo
+            if(sumFill && sumVal) {
+                sumFill.style.width = (nota * 10) + "%"; // 10 = 100%, 5 = 50%
+                sumFill.style.backgroundColor = corHex;
+                sumVal.textContent = nota;
+                sumVal.style.color = corHex;
             }
         }
 
         desafios.forEach((tema, index) => {
             const id = index + 1;
+            
+            // 1. GERAÇÃO DOS ACORDEÕES
             const div = document.createElement('div');
             div.className = 'accordion-item';
             
             div.innerHTML = `
-                <button type="button" class="accordion-header">${id}. ${tema}</button>
+                <button type="button" class="accordion-header">
+                    <span class="accordion-header-title">${id}. ${tema}</span>
+                </button>
                 <div class="accordion-content">
                     <div class="info-box">
                         <strong>Síntese do Relatório:</strong> Insira aqui o resumo do que o Instituto Escolhas diagnosticou sobre o desafio de <em>${tema}</em>.
@@ -506,10 +603,21 @@
                 </div>
             `;
             container.appendChild(div);
+
+            // 2. GERAÇÃO DO PAINEL DE RESUMO GERAL
+            summaryContainer.innerHTML += `
+                <div class="summary-item">
+                    <div class="summary-item-title">${id}. ${tema}</div>
+                    <div class="summary-item-bar-bg">
+                        <div class="summary-item-bar-fill" id="summary_fill_${id}" style="width: 50%; background-color: #E67700;"></div>
+                    </div>
+                    <div class="summary-item-value" id="summary_val_${id}">5</div>
+                </div>
+            `;
         });
 
+        // Eventos de abrir e fechar acordeões
         const headers = document.querySelectorAll('.accordion-header');
-        
         headers.forEach(header => {
             header.addEventListener('click', function() {
                 const item = this.parentElement;
@@ -528,7 +636,7 @@
             });
         });
 
-        // Lógica de Envio para a Planilha do Google
+        // Lógica de Envio para a Planilha
         const form = document.getElementById('formDinamica');
         const btnSubmit = document.getElementById('btnSubmit');
         const loadingMessage = document.getElementById('loadingMessage');
@@ -547,7 +655,7 @@
                     successMessage.style.display = 'block';
                     form.reset(); 
                     
-                    // Reseta os valores das barras para 5 após o envio
+                    // Reseta tudo para 5 após o envio
                     for(let i=1; i<=9; i++) {
                         atualizarTextoSlider(5, i);
                     }
