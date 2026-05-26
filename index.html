@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Interativo: Desafios ATER - MDA</title>
+    <style>
+        /* Padrão de Cores Identidade Visual */
+        :root {
+            --gov-blue: #1351B4;
+            --gov-blue-dark: #071D41;
+            --gov-green: #00824A;
+            --gov-yellow: #FFCD00;
+            --gov-bg: #F4F6F8;
+            --gov-surface: #FFFFFF;
+            --gov-text: #212529;
+            --gov-text-muted: #6C757D;
+            --gov-border: #DEE2E6;
+            --gov-red: #E16B80;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--gov-bg);
+            color: var(--gov-text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* Linha Azul no Topo */
+        .linha-topo-azul {
+            background-color: var(--gov-blue);
+            height: 12px;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Cabeçalho com Espaço para Duas Imagens */
+        .header-logos {
+            background-color: var(--gov-surface);
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* Linha decorativa colorida embaixo do cabeçalho */
+        .header-logos::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            width: 100%;
+            background: linear-gradient(to right, var(--gov-green) 25%, var(--gov-yellow) 25% 50%, var(--gov-blue) 50% 75%, var(--gov-red) 75%);
+        }
+
+        .logo-container {
+            width: 45%;
+            display: flex;
+        }
+
+        .logo-container.right {
+            justify-content: flex-end;
+        }
+
+        .logo-placeholder {
+            width: 100%;
+            max-width: 280px;
+            height: 75px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f8f9fa;
+            border: 2px dashed #ced4da;
+            border-radius: 6px;
+            color: #6c757d;
+            font-weight: 600;
+            font-size: 0.9em;
+            text-align: center;
+            padding: 0 15px;
+            box-sizing: border-box;
+        }
+
+        .logo-placeholder img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* Container Principal */
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title h1 {
+            color: var(--gov-blue-dark);
+            margin-bottom: 10px;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+
+        .page-title p {
+            color: var(--gov-text-muted);
+            font-size: 1.15em;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Accordion */
+        .accordion-item {
+            background-color: var(--gov-surface);
+            border: 1px solid var(--gov-border);
+            border-radius: 8px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .accordion-header {
+            width: 100%;
+            background-color: var(--gov-surface);
+            border: none;
+            border-left: 6px solid var(--gov-blue);
+            padding: 20px 25px;
+            text-align: left;
+            font-size: 1.15em;
+            font-weight: 700;
+            color: var(--gov-blue-dark);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .accordion-header:hover {
+            background-color: #f8fbff;
+            color: var(--gov-blue);
+        }
+
+        .accordion-header::after {
+            content: '\25BC';
+            font-size: 0.8em;
+            color: var(--gov-blue);
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-item.active .accordion-header::after {
+            transform: rotate(-180deg);
+        }
+
+        .accordion-item.active {
+            border-color: var(--gov-blue);
+            box-shadow: 0 4px 12px rgba(19, 81, 180, 0.1);
+        }
+
+        .accordion-item.active .accordion-header {
+            border-left-color: var(--gov-green);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease;
+            background-color: var(--gov-surface);
+            padding: 0 25px;
+        }
+
+        .accordion-item.active .accordion-content {
+            padding: 0 25px 25px 25px;
+            border-top: 1px solid #f1f3f5;
+        }
+
+        /* Elementos Internos do Formulário */
+        .info-box {
+            background-color: #fcfdfd;
+            border-left: 4px solid var(--gov-yellow);
+            padding: 18px;
+            margin-top: 15px;
+            margin-bottom: 25px;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.95em;
+            color: #495057;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.03);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--gov-blue-dark);
+            font-size: 0.95em;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--gov-border);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.95em;
+            box-sizing: border-box;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background-color: #fafbfc;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--gov-blue);
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(19, 81, 180, 0.15);
+        }
+
+        /* Slider Customizado */
+        .slider-container {
+            padding: 10px 0;
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid var(--gov-border);
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(to right, #E16B80, var(--gov-yellow), var(--gov-green));
+            outline: none;
+            margin: 15px 0;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 3px solid var(--gov-blue);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.1s;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: var(--gov-text-muted);
+        }
+
+        .concordancia-valor {
+            text-align: center;
+            font-size: 1.15em;
+            font-weight: 700;
+            color: var(--gov-blue);
+            margin-top: 15px;
+            padding: 8px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Botão de Envio */
+        .btn-submit {
+            display: block;
+            width: 100%;
+            background-color: var(--gov-blue);
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 1.2em;
+            font-weight: 700;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            margin-top: 40px;
+            box-shadow: 0 4px 10px rgba(19, 81, 180, 0.2);
+        }
+
+        .btn-submit:hover {
+            background-color: var(--gov-blue-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .header-logos {
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+            }
+            .logo-container {
+                width: 100%;
+                justify-content: center !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Linha Azul Fina no Topo Extremo -->
+    <div class="linha-topo-azul"></div>
+
+    <!-- Cabeçalho Limpo com Espaço para Duas Imagens -->
+    <div class="header-logos">
+        <!-- Espaço da Esquerda (Ex: Logo MDA / DATER) -->
+        <div class="logo-container">
+            <div class="logo-placeholder">
+                <!-- Para inserir a imagem real no futuro, basta remover o texto abaixo e colocar: <img src="link_da_imagem.png" alt="Logo 1"> -->
+                <span>[Espaço para Imagem 1]</span>
+            </div>
+        </div>
+
+        <!-- Espaço da Direita (Ex: Logo Parceiro / Evento) -->
+        <div class="logo-container right">
+            <div class="logo-placeholder">
+                <!-- Para inserir a imagem real no futuro, basta remover o texto abaixo e colocar: <img src="link_da_imagem.png" alt="Logo 2"> -->
+                <span>[Espaço para Imagem 2]</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-title">
+            <h1>Avaliação Estratégica</h1>
+            <p>Análise do Relatório Instituto Escolhas: Os Desafios da ATER no Brasil</p>
+        </div>
+
+        <form id="formDinamica">
+            <div id="accordion-container"></div>
+            <button type="submit" class="btn-submit">Finalizar e Enviar Análise</button>
+        </form>
+    </div>
+
+    <script>
+        // Os 9 desafios mapeados conforme solicitado
+        const desafios = [
+            "Marco Legal",
+            "Conjuntura política",
+            "Recursos federais",
+            "Capacidade estatal",
+            "Mecanismos de implantação",
+            "Desigualdade na oferta",
+            "Trabalhadores e condições de trabalho",
+            "Inovação tecnológica",
+            "Monitoramento e avaliação"
+        ];
+
+        const container = document.getElementById('accordion-container');
+
+        // Função para atualizar o texto e a cor com base no valor do slider
+        function atualizarTextoSlider(valor, id) {
+            const div = document.getElementById(`texto_slider_${id}`);
+            if (valor < 35) {
+                div.textContent = "Discordo do diagnóstico apresentado";
+                div.style.color = "#C92A2A"; 
+                div.style.backgroundColor = "#FFF5F5";
+            } else if (valor < 65) {
+                div.textContent = "Concordo Parcialmente (com ressalvas)";
+                div.style.color = "#E67700"; 
+                div.style.backgroundColor = "#FFF9DB";
+            } else {
+                div.textContent = "Concordo Totalmente com o relatório";
+                div.style.color = "#00824A"; 
+                div.style.backgroundColor = "#EBFBEE";
+            }
+        }
+
+        // Gerador automático das caixas de desafio
+        desafios.forEach((tema, index) => {
+            const id = index + 1;
+            const div = document.createElement('div');
+            div.className = 'accordion-item';
+            
+            div.innerHTML = `
+                <button type="button" class="accordion-header">${id}. ${tema}</button>
+                <div class="accordion-content">
+                    <div class="info-box">
+                        <strong>Síntese do Relatório:</strong> Insira aqui o resumo do que o Instituto Escolhas diagnosticou sobre o desafio de <em>${tema}</em>. (Edite este bloco conforme o texto original do documento).
+                    </div>
+
+                    <div class="slider-container">
+                        <label for="slider_${id}">Nível de concordância com este diagnóstico:</label>
+                        <input type="range" min="0" max="100" value="50" class="slider" id="slider_${id}" name="concordancia_${id}" oninput="atualizarTextoSlider(this.value, ${id})">
+                        <div class="slider-labels">
+                            <span>Discordo</span>
+                            <span>Neutro</span>
+                            <span>Concordo</span>
+                        </div>
+                        <div class="concordancia-valor" id="texto_slider_${id}" style="color: #E67700; background-color: #FFF9DB;">Concordo Parcialmente (com ressalvas)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>1. Como podemos sanar, mitigar ou enfrentar este desafio?</label>
+                        <textarea name="enfrentamento_${id}" placeholder="Descreva propostas de soluções, ajustes normativos, capacitação, etc..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>2. O que o DATER/MDA já tem feito em relação a isso?</label>
+                        <textarea name="acoes_dater_${id}" placeholder="Ex: Reestruturações de sistemas (SIATER), eventos de formação, editais vigentes..."></textarea>
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+
+        // Lógica do Acordeão (Abrir e Fechar)
+        const headers = document.querySelectorAll('.accordion-header');
+        
+        headers.forEach(header => {
+            header.addEventListener('click', function() {
+                const item = this.parentElement;
+                const content = this.nextElementSibling;
+                
+                const isActive = item.classList.contains('active');
+                
+                // Fecha todas as outras caixas (comportamento padrão de acordeão)
+                document.querySelectorAll('.accordion-item').forEach(i => {
+                    i.classList.remove('active');
+                    i.querySelector('.accordion-content').style.maxHeight = null;
+                });
+
+                // Se não estava ativo, abre
+                if (!isActive) {
+                    item.classList.add('active');
+                    content.style.maxHeight = content.scrollHeight + 150 + "px"; 
+                }
+            });
+        });
+
+        // Evento de Envio do Formulário
+        document.getElementById('formDinamica').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Análise finalizada com sucesso! Este botão enviará os dados estruturados para a coordenação.');
+        });
+    </script>
+
+</body>
+</html>
