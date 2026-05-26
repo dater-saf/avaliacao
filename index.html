@@ -5,42 +5,481 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Interativo: Desafios ATER - MDA</title>
     <style>
-        /* [Manter o CSS do código anterior, ele está perfeito] */
-        :root { --gov-blue: #1351B4; --gov-blue-dark: #071D41; --gov-green: #00824A; --gov-yellow: #FFCD00; --gov-bg: #F4F6F8; --gov-surface: #FFFFFF; --gov-text: #212529; --gov-text-muted: #6C757D; --gov-border: #DEE2E6; --gov-red: #E16B80; }
-        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: var(--gov-bg); color: var(--gov-text); margin: 0; padding: 0; line-height: 1.6; }
-        .linha-topo-azul { background-color: var(--gov-blue); height: 12px; width: 100%; margin: 0; padding: 0; }
-        .header-logos { background-color: var(--gov-surface); padding: 25px 40px; display: flex; justify-content: space-between; align-items: center; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .header-logos::after { content: ''; position: absolute; bottom: 0; left: 0; height: 4px; width: 100%; background: linear-gradient(to right, var(--gov-green) 25%, var(--gov-yellow) 25% 50%, var(--gov-blue) 50% 75%, var(--gov-red) 75%); }
-        .logo-container { width: 45%; display: flex; } .logo-container.right { justify-content: flex-end; } .logo-img { max-width: 100%; max-height: 75px; object-fit: contain; }
-        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
-        .page-title { text-align: center; margin-bottom: 40px; }
-        .page-title h1 { color: var(--gov-blue-dark); margin-bottom: 10px; font-size: 2.2em; font-weight: 700; }
-        .page-title p { color: var(--gov-text-muted); font-size: 1.15em; max-width: 700px; margin: 0 auto; }
-        .participant-info, .comments-section { background-color: var(--gov-surface); padding: 25px; border-radius: 8px; border: 1px solid var(--gov-border); border-left: 6px solid var(--gov-blue-dark); margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .comments-section { border-left: 6px solid var(--gov-yellow); margin-top: 30px; }
-        .participant-info h3, .comments-section h3 { margin-top: 0; color: var(--gov-blue-dark); margin-bottom: 20px; }
-        .participant-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .form-group-info label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--gov-blue-dark); }
-        .form-group-info input, .form-group-info textarea { width: 100%; padding: 12px; border: 1px solid var(--gov-border); border-radius: 6px; font-family: inherit; font-size: 1em; box-sizing: border-box; background-color: #fafbfc; transition: border-color 0.2s; }
-        .form-group-info textarea { resize: vertical; min-height: 100px; }
-        .accordion-item { background-color: var(--gov-surface); border: 1px solid var(--gov-border); border-radius: 8px; margin-bottom: 16px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .accordion-header { width: 100%; background-color: var(--gov-surface); border: none; border-left: 6px solid var(--gov-blue); padding: 20px 25px; font-size: 1.15em; font-weight: 700; color: var(--gov-blue-dark); cursor: pointer; display: flex; align-items: center; }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background-color: var(--gov-surface); padding: 0 25px; }
-        .info-box { background-color: #fcfdfd; border-left: 4px solid var(--gov-yellow); padding: 18px; margin-top: 15px; margin-bottom: 25px; border-radius: 0 6px 6px 0; font-size: 0.95em; }
-        .slider-container { padding: 20px; border: 1px solid var(--gov-border); border-radius: 8px; margin-bottom: 30px; }
-        .slider { -webkit-appearance: none; width: 100%; height: 8px; background: linear-gradient(to right, #E16B80, var(--gov-yellow), var(--gov-green)); border-radius: 4px; outline: none; }
-        .slider::-webkit-slider-thumb { -webkit-appearance: none; width: 26px; height: 26px; border-radius: 50%; background: #ffffff; border: 3px solid var(--gov-blue); cursor: pointer; }
-        .concordancia-valor { text-align: center; font-size: 1.15em; font-weight: 700; color: var(--gov-blue); margin-top: 15px; padding: 8px; background-color: #f8f9fa; border-radius: 4px; }
-        .summary-panel { background-color: var(--gov-surface); padding: 30px 25px; border-radius: 8px; border: 1px solid var(--gov-border); margin-top: 40px; border-top: 6px solid var(--gov-green); }
-        .btn-submit { display: block; width: 100%; background-color: var(--gov-blue); color: white; border: none; padding: 18px; font-size: 1.2em; font-weight: 700; border-radius: 30px; cursor: pointer; }
+        /* Padrão de Cores Identidade Visual */
+        :root {
+            --gov-blue: #1351B4;
+            --gov-blue-dark: #071D41;
+            --gov-green: #00824A;
+            --gov-yellow: #FFCD00;
+            --gov-bg: #F4F6F8;
+            --gov-surface: #FFFFFF;
+            --gov-text: #212529;
+            --gov-text-muted: #6C757D;
+            --gov-border: #DEE2E6;
+            --gov-red: #E16B80;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--gov-bg);
+            color: var(--gov-text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* Linha Azul no Topo */
+        .linha-topo-azul {
+            background-color: var(--gov-blue);
+            height: 12px;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Cabeçalho com Espaço para Duas Imagens */
+        .header-logos {
+            background-color: var(--gov-surface);
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .header-logos::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            width: 100%;
+            background: linear-gradient(to right, var(--gov-green) 25%, var(--gov-yellow) 25% 50%, var(--gov-blue) 50% 75%, var(--gov-red) 75%);
+        }
+
+        .logo-container {
+            width: 45%;
+            display: flex;
+        }
+
+        .logo-container.right {
+            justify-content: flex-end;
+        }
+
+        .logo-img {
+            max-width: 100%;
+            max-height: 75px;
+            object-fit: contain;
+        }
+
+        /* Container Principal */
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title h1 {
+            color: var(--gov-blue-dark);
+            margin-bottom: 10px;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+
+        .page-title p {
+            color: var(--gov-text-muted);
+            font-size: 1.15em;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Dados do Participante e Comentários */
+        .participant-info, .comments-section {
+            background-color: var(--gov-surface);
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid var(--gov-border);
+            border-left: 6px solid var(--gov-blue-dark);
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .comments-section {
+            border-left: 6px solid var(--gov-yellow);
+            margin-top: 30px;
+        }
+
+        .participant-info h3, .comments-section h3 {
+            margin-top: 0;
+            color: var(--gov-blue-dark);
+            margin-bottom: 20px;
+        }
+
+        .participant-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group-info label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--gov-blue-dark);
+        }
+
+        .form-group-info input, .form-group-info textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--gov-border);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1em;
+            box-sizing: border-box;
+            background-color: #fafbfc;
+            transition: border-color 0.2s;
+        }
+
+        .form-group-info textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group-info input:focus, .form-group-info textarea:focus {
+            outline: none;
+            border-color: var(--gov-blue);
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(19, 81, 180, 0.15);
+        }
+
+        /* Accordion */
+        .accordion-item {
+            background-color: var(--gov-surface);
+            border: 1px solid var(--gov-border);
+            border-radius: 8px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .accordion-header {
+            width: 100%;
+            background-color: var(--gov-surface);
+            border: none;
+            border-left: 6px solid var(--gov-blue);
+            padding: 20px 25px;
+            font-size: 1.15em;
+            font-weight: 700;
+            color: var(--gov-blue-dark);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .accordion-header-title {
+            flex-grow: 1;
+            text-align: left;
+        }
+
+        .accordion-header:hover {
+            background-color: #f8fbff;
+            color: var(--gov-blue);
+        }
+
+        .accordion-header::after {
+            content: '\25BC';
+            font-size: 0.8em;
+            color: var(--gov-blue);
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-item.active .accordion-header::after {
+            transform: rotate(-180deg);
+        }
+
+        .accordion-item.active {
+            border-color: var(--gov-blue);
+            box-shadow: 0 4px 12px rgba(19, 81, 180, 0.1);
+        }
+
+        .accordion-item.active .accordion-header {
+            border-left-color: var(--gov-green);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease;
+            background-color: var(--gov-surface);
+            padding: 0 25px;
+        }
+
+        .accordion-item.active .accordion-content {
+            padding: 0 25px 25px 25px;
+            border-top: 1px solid #f1f3f5;
+        }
+
+        /* Elementos Internos do Formulário */
+        .info-box {
+            background-color: #fcfdfd;
+            border-left: 4px solid var(--gov-yellow);
+            padding: 18px;
+            margin-top: 15px;
+            margin-bottom: 25px;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.95em;
+            color: #495057;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.03);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--gov-blue-dark);
+            font-size: 0.95em;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--gov-border);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.95em;
+            box-sizing: border-box;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background-color: #fafbfc;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--gov-blue);
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(19, 81, 180, 0.15);
+        }
+
+        /* Slider Customizado */
+        .slider-container {
+            padding: 10px 0;
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid var(--gov-border);
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(to right, #E16B80, var(--gov-yellow), var(--gov-green));
+            outline: none;
+            margin: 15px 0;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 3px solid var(--gov-blue);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.1s;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: var(--gov-text-muted);
+        }
+
+        .concordancia-valor {
+            text-align: center;
+            font-size: 1.15em;
+            font-weight: 700;
+            color: var(--gov-blue);
+            margin-top: 15px;
+            padding: 8px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* PAINEL DE RESUMO GERAL */
+        .summary-panel {
+            background-color: var(--gov-surface);
+            padding: 30px 25px;
+            border-radius: 8px;
+            border: 1px solid var(--gov-border);
+            margin-top: 40px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            border-top: 6px solid var(--gov-green);
+        }
+        
+        .summary-panel h3 {
+            color: var(--gov-blue-dark);
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 1.4em;
+            text-align: center;
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+        }
+
+        .summary-item-title {
+            width: 40%;
+            font-weight: 600;
+            color: var(--gov-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .summary-item-bar-bg {
+            width: 50%;
+            height: 12px;
+            background-color: #e9ecef;
+            border-radius: 6px;
+            margin: 0 15px;
+            overflow: hidden;
+        }
+
+        .summary-item-bar-fill {
+            height: 100%;
+            width: 50%;
+            background-color: #E67700;
+            transition: width 0.4s ease, background-color 0.4s ease;
+        }
+
+        .summary-item-value {
+            width: 10%;
+            font-weight: bold;
+            text-align: right;
+            color: #E67700;
+            font-size: 1.1em;
+        }
+
+        /* Botão de Envio e Loading */
+        .btn-submit {
+            display: block;
+            width: 100%;
+            background-color: var(--gov-blue);
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 1.2em;
+            font-weight: 700;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            margin-top: 40px;
+            box-shadow: 0 4px 10px rgba(19, 81, 180, 0.2);
+        }
+
+        .btn-submit:hover {
+            background-color: var(--gov-blue-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-submit:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        #loadingMessage {
+            display: none;
+            text-align: center;
+            margin-top: 15px;
+            color: var(--gov-blue);
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        #successMessage {
+            display: none;
+            text-align: center;
+            margin-top: 15px;
+            color: var(--gov-green);
+            font-weight: bold;
+            font-size: 1.2em;
+            background-color: #EBFBEE;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--gov-green);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .header-logos {
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+            }
+            .logo-container {
+                width: 100%;
+                justify-content: center !important;
+            }
+            .participant-grid {
+                grid-template-columns: 1fr;
+            }
+            .summary-item {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-bottom: 20px;
+            }
+            .summary-item-title, .summary-item-bar-bg, .summary-item-value {
+                width: 100%;
+                margin: 5px 0;
+                text-align: left;
+            }
+        }
     </style>
 </head>
 <body>
 
     <div class="linha-topo-azul"></div>
+
     <div class="header-logos">
-        <div class="logo-container"><img src="ater.png" alt="Logo ATER" class="logo-img"></div>
-        <div class="logo-container right"><img src="mda.png" alt="Logo MDA" class="logo-img"></div>
+        <div class="logo-container">
+            <img src="ater.png" alt="Logo ATER" class="logo-img">
+        </div>
+        <div class="logo-container right">
+            <img src="mda.png" alt="Logo MDA" class="logo-img">
+        </div>
     </div>
 
     <div class="container">
@@ -48,18 +487,30 @@
             <h1>Avaliação Estratégica</h1>
             <p>Análise do Relatório Instituto Escolhas: Os Desafios da ATER no Brasil</p>
         </div>
-
-        <div class="info-box" style="background-color: #e6f0eb; border-left: 6px solid var(--gov-blue); padding: 20px; margin-bottom: 30px;">
-            <p>Conforme o Estudo <strong>"Por que e como fortalecer a política pública de ATER?"</strong> do Instituto Escolhas, convidamos os coordenadores a registrarem suas percepções. Acesse na íntegra: <a href="https://escolhas.org/estudos-e-publicacoes/" target="_blank">escolhas.org/estudos-e-publicacoes/</a></p>
-            <p><strong>Sua identidade será preservada.</strong> Contribua com o que podemos fazer frente a estes desafios e o que já está sendo estruturado no âmbito da PNATER.</p>
-        </div>
-
+<div class="info-box" style="background-color: #e6f0eb; border-left: 6px solid var(--gov-blue); padding: 20px; margin-bottom: 30px;">
+    <p style="font-size: 1em; color: var(--gov-text-dark); margin: 0;">
+        Conforme o Estudo <strong>"Por que e como fortalecer a política pública de ATER?" (Relatório técnico parte I)</strong>, elaborado pelo Instituto Escolhas e apresentado em reunião do DATER, convidamos a registrarem suas opiniões e percepções. 
+        Você pode acessar o relatório na íntegra em: 
+        <a href="https://escolhas.org/estudos-e-publicacoes/" target="_blank" style="color: var(--gov-blue); font-weight: bold;">escolhas.org/estudos-e-publicacoes/</a>
+    </p>
+    <p style="font-size: 1em; color: var(--gov-text-dark); margin: 15px 0 0 0;">
+        O objetivo é mapearmos o que podemos fazer frente a estes desafios e o que já está sendo estruturado pelo DATER/MDA no âmbito da PNATER. 
+        <strong>Suas contribuições individuais serão fundamentais para o nosso planejamento estratégico.</strong> 
+    </p>
+</div>
         <form id="formDinamica">
+            
             <div class="participant-info">
                 <h3>Identificação</h3>
                 <div class="participant-grid">
-                    <div class="form-group-info"><label>Nome Completo:</label><input type="text" name="Nome" required></div>
-                    <div class="form-group-info"><label>Coordenação:</label><input type="text" name="Coordenacao" required></div>
+                    <div class="form-group-info">
+                        <label for="Nome">Nome Completo:</label>
+                        <input type="text" id="Nome" name="Nome" required placeholder="Digite seu nome">
+                    </div>
+                    <div class="form-group-info">
+                        <label for="Coordenacao">Coordenação Vinculada:</label>
+                        <input type="text" id="Coordenacao" name="Coordenacao" required placeholder="Ex: CGFE, CGMI, etc...">
+                    </div>
                 </div>
             </div>
 
@@ -67,90 +518,222 @@
             
             <div class="comments-section">
                 <h3>Comentários Adicionais</h3>
-                <div class="form-group-info"><textarea name="comentario" placeholder="Escreva suas observações gerais aqui..."></textarea></div>
+                <div class="form-group-info">
+                    <label for="comentario">Gostaria de deixar alguma observação geral, crítica ou sugestão sobre o relatório?</label>
+                    <textarea id="comentario" name="comentario" placeholder="Escreva seus comentários finais aqui..."></textarea>
+                </div>
             </div>
 
-            <div class="summary-panel">
+            <div class="summary-panel" id="summary-panel">
                 <h3>Visão Geral da sua Concordância</h3>
                 <div id="summary-content"></div>
             </div>
 
-            <button type="submit" class="btn-submit" id="btnSubmit">Finalizar Envio</button>
+            <button type="submit" class="btn-submit" id="btnSubmit">Finalizar e Enviar Análise</button>
+            <div id="loadingMessage">Enviando dados... Aguarde.</div>
+            <div id="successMessage">Análise enviada com sucesso! Obrigado pela contribuição.</div>
         </form>
     </div>
 
     <script>
+        // URL DO SEU APPS SCRIPT
         const scriptURL = 'https://script.google.com/macros/s/AKfycbxBq03I0u9hgTNPoArvAT1gxiV1MqcQmNvVgk45TC-AeWnR-JgbY14FOsslsd1J2gCY/exec'; 
 
-        const desafiosData = [
-            { titulo: "Marco Legal", resumo: "A Política Nacional de ATER possui divergências sobre seu escopo, com alguns avaliando-a como muito complexa. Não há mecanismos para garantir um financiamento permanente, gerando forte instabilidade. O desenho institucional da participação social é frágil, dependendo de conselhos instáveis. Faltam, ainda, dispositivos legais explícitos que promovam a coordenação entre órgãos federais, estados e municípios, além da frágil integração com outras políticas públicas." },
-            { titulo: "Conjuntura Política", resumo: "A execução da política de ATER é altamente sensível a mudanças de governo. As transições frequentemente resultam em reconfigurações das prioridades, gerando profundas descontinuidades programáticas, constantes reestruturações administrativas e fortes variações orçamentárias. Essa instabilidade crônica prejudica a previsibilidade das ações e o atendimento contínuo aos agricultores." },
-            { titulo: "Recursos Federais", resumo: "O volume de recursos federais destinados à ATER é historicamente reduzido e sofre forte instabilidade, mantendo-se abaixo dos níveis pré-pandemia. O financiamento depende massivamente dos estados, com o gasto direto da União sendo menor que as despesas de algumas empresas estaduais isoladas. O orçamento transita por diversos ministérios e autarquias conforme o governo, evidenciando instabilidade institucional." },
-            { titulo: "Capacidades Estatais", resumo: "A implementação da política enfrenta fragilidades institucionais, operacionais e políticas severas no MDA e na ANATER. O ministério sofre com escassez de pessoal e vulnerabilidade política, enquanto a agência é criticada pelo foco excessivo em processos burocráticos de editais. A relação tensionada entre ambos prejudica a coordenação estratégica." },
-            { titulo: "Mecanismos de Implementação", resumo: "As chamadas públicas, principal instrumento da política, induzem contratos de curta duração que dificultam o atendimento contínuo. Há disputas sobre as abordagens, com críticas à persistência do viés produtivista em detrimento de visões agroecológicas. Observa-se fragmentação na coordenação interfederativa e participação social que funciona mais para validação de decisões do que para construção coletiva." },
-            { titulo: "Desigualdades na Oferta", resumo: "A cobertura de ATER no Brasil apresenta déficit estrutural significativo, deixando cerca de 80% dos estabelecimentos sem assistência. O acesso penaliza os agricultores mais vulneráveis, que enfrentam barreiras documentais. Observam-se vazios territoriais crônicos, particularmente na região Norte. Além disso, produtores integrados recebem serviços focados apenas na produção, ignorando a necessária diversificação de renda." },
-            { titulo: "Trabalhadores e Condições de Trabalho", resumo: "Existe um déficit estrutural de trabalhadores para atender a demanda nacional. O quadro do setor público sofre com o envelhecimento e a falta de concursos. Profissionais enfrentam condições precárias, como baixa remuneração e infraestrutura logística deficiente. Há forte desigualdade de gênero e os currículos de formação inicial continuam orientados à agricultura de larga escala, negligenciando a agricultura familiar e agroecologia." },
-            { titulo: "Inovação e Tecnologia", resumo: "Evidencia-se uma desconexão estrutural entre as instituições de pesquisa (como a Embrapa) e as entidades que ofertam ATER. Os parcos recursos das entidades estaduais são consumidos pela manutenção institucional, limitando investimentos na difusão de novas tecnologias. A adoção de ferramentas digitais esbarra na falta de conectividade. Experiências territoriais de inovação social recebem pouco reconhecimento e financiamento." },
-            { titulo: "Monitoramento e Avaliação", resumo: "O monitoramento e a avaliação são áreas pouco desenvolvidas. A política sofre com a escassez de dados robustos, séries históricas e indicadores padronizados que permitam medir impactos socioeconômicos reais. As métricas existentes são simplificadas e fragmentadas. Faltam estruturas e equipes dedicadas à análise institucional, limitando o aprendizado e a formulação de diretrizes baseadas em evidências sólidas." }
+        // Lista de desafios atualizada com os textos enviados
+        const desafios = [
+            {
+                titulo: "Marco Legal Federal",
+                resumo: "A Política Nacional de ATER possui divergências sobre seu escopo, com alguns avaliando-a como muito complexa. Não há mecanismos para garantir um financiamento permanente, gerando forte instabilidade. O desenho institucional da participação social é frágil, dependendo de conselhos instáveis. Faltam, ainda, dispositivos legais explícitos que promovam a coordenação entre órgãos federais, estados e municípios, além da frágil integração com outras políticas públicas."
+            },
+            {
+                titulo: "Conjuntura Política",
+                resumo: "A execução da política de ATER é altamente sensível a mudanças de governo. As transições frequentemente resultam em reconfigurações das prioridades, gerando profundas descontinuidades programáticas, constantes reestruturações administrativas e fortes variações orçamentárias. Essa instabilidade crônica prejudica a previsibilidade das ações e o atendimento contínuo aos agricultores, impedindo a consolidação de diretrizes estratégicas e dificultando o desenvolvimento rural sustentável ao longo do tempo."
+            },
+            {
+                titulo: "Recursos Federais",
+                resumo: "O volume de recursos federais destinados à ATER é historicamente reduzido e sofre forte instabilidade, mantendo-se abaixo dos níveis pré-pandemia. O financiamento depende massivamente dos estados, com o gasto direto da União sendo menor que as despesas de algumas empresas estaduais isoladas. O orçamento transita por diversos ministérios e autarquias conforme o governo, evidenciando instabilidade institucional e dificultando fluxos previsíveis."
+            },
+            {
+                titulo: "Capacidades Estatais",
+                resumo: "A implementação da política enfrenta fragilidades institucionais, operacionais e políticas severas no MDA e na ANATER. O ministério sofre com escassez de pessoal e vulnerabilidade política, enquanto a agência é criticada pelo foco excessivo em processos burocráticos de editais. A relação tensionada entre ambos prejudica a coordenação estratégica. Nos estados, as capacidades de gestão e infraestrutura revelam-se extremamente desiguais."
+            },
+            {
+                titulo: "Mecanismos de Implementação",
+                resumo: "As chamadas públicas, principal instrumento da política, induzem contratos de curta duração que dificultam o atendimento contínuo. Há disputas sobre as abordagens, com críticas à persistência do viés produtivista em detrimento de visões agroecológicas e territorializadas. Observa-se também fragmentação na coordenação interfederativa e intersetorial, além de instâncias de participação social que frequentemente funcionam mais para validação de decisões do que para construção coletiva."
+            },
+            {
+                titulo: "Desigualdades na Oferta",
+                resumo: "A cobertura de ATER no Brasil apresenta déficit estrutural significativo, deixando cerca de oitenta por cento dos estabelecimentos agropecuários sem assistência. O acesso penaliza os agricultores mais vulneráveis e com propriedades menores, que enfrentam também barreiras documentais. Observam-se vazios territoriais crônicos, particularmente na região Norte. Além disso, produtores integrados a cadeias específicas recebem serviços focados apenas na produção, ignorando a necessária diversificação de renda."
+            },
+            {
+                titulo: "Trabalhadores e Condições de Trabalho",
+                resumo: "Existe um déficit estrutural de trabalhadores para atender a demanda nacional. O quadro do setor público sofre com o envelhecimento e a falta de concursos. Profissionais enfrentam condições precárias, como baixa remuneração e infraestrutura logística deficiente. Há forte desigualdade de gênero nas funções e os currículos de formação inicial continuam orientados à agricultura de larga escala, negligenciando as especificidades da agricultura familiar e agroecologia."
+            },
+            {
+                titulo: "Inovação e Tecnologia",
+                resumo: "Evidencia-se uma desconexão estrutural entre as instituições de pesquisa (como a Embrapa) e as entidades que ofertam ATER. Os parcos recursos das entidades estaduais são consumidos pela manutenção institucional, limitando investimentos na difusão de novas tecnologias. A adoção de ferramentas digitais esbarra na falta de conectividade. Experiências territoriais de inovação social e pesquisa-ação recebem pouco reconhecimento formal e financiamento do Estado."
+            },
+            {
+                titulo: "Monitoramento e Avaliação",
+                resumo: "O monitoramento e a avaliação da política de ATER são áreas pouco desenvolvidas. A política sofre com a escassez de dados robustos, séries históricas e indicadores padronizados que permitam medir impactos socioeconômicos reais. As métricas existentes são simplificadas e fragmentadas entre diferentes atores. Faltam estruturas e equipes dedicadas à análise institucional, limitando o aprendizado, a coordenação estratégica e a formulação de diretrizes baseadas em evidências sólidas."
+            }
         ];
 
-        // [O restante do script de renderização e envio permanece igual]
         const container = document.getElementById('accordion-container');
         const summaryContainer = document.getElementById('summary-content');
 
-        desafiosData.forEach((d, index) => {
-            const id = index + 1;
-            container.innerHTML += `
-                <div class="accordion-item">
-                    <button type="button" class="accordion-header"><span class="accordion-header-title">${id}. ${d.titulo}</span></button>
-                    <div class="accordion-content">
-                        <div class="info-box"><strong>Síntese:</strong> ${d.resumo}</div>
-                        <div class="slider-container">
-                            <label>Nível de concordância (Escala 1 a 10):</label>
-                            <input type="range" min="1" max="10" step="1" value="5" class="slider" name="concordancia_${id}" oninput="atualizar(this.value, ${id})">
-                            <div class="concordancia-valor" id="val_${id}">Nota 5 - Concordo Parcialmente</div>
-                        </div>
-                        <div class="form-group"><label>Como podemos sanar, mitigar ou enfrentar este desafio?</label><textarea name="enfrentamento_${id}"></textarea></div>
-                        <div class="form-group"><label>O que o DATER já faz?</label><textarea name="acoes_dater_${id}"></textarea></div>
-                    </div>
-                </div>`;
-            summaryContainer.innerHTML += `<div class="summary-item"><div class="summary-item-title">${id}. ${d.titulo}</div><div class="summary-item-bar-bg"><div class="summary-item-bar-fill" id="fill_${id}"></div></div><div class="summary-item-value" id="val_txt_${id}">5</div></div>`;
-        });
+        // Lógica unificada para atualizar Slider e Painel de Resumo
+        function atualizarTextoSlider(valor, id) {
+            const div = document.getElementById(`texto_slider_${id}`);
+            const sumFill = document.getElementById(`summary_fill_${id}`);
+            const sumVal = document.getElementById(`summary_val_${id}`);
+            
+            const nota = parseInt(valor);
+            let corHex = "";
+            let bgHex = "";
 
-        function atualizar(v, id) {
-            const valDiv = document.getElementById('val_' + id);
-            const fill = document.getElementById('fill_' + id);
-            const txt = document.getElementById('val_txt_' + id);
-            const n = parseInt(v);
-            let cor = n <= 3 ? "#C92A2A" : (n <= 7 ? "#E67700" : "#00824A");
-            valDiv.textContent = `Nota ${n} - ${n <= 3 ? "Discordo" : (n <= 7 ? "Concordo Parcialmente" : "Concordo Totalmente")}`;
-            valDiv.style.color = cor;
-            fill.style.width = (n * 10) + "%"; fill.style.backgroundColor = cor;
-            txt.textContent = n; txt.style.color = cor;
+            // Definição das Cores
+            if (nota <= 3) {
+                corHex = "#C92A2A"; // Vermelho
+                bgHex = "#FFF5F5";
+                div.textContent = `Nota ${nota} - Discordo do diagnóstico`;
+            } else if (nota <= 7) {
+                corHex = "#E67700"; // Amarelo
+                bgHex = "#FFF9DB";
+                div.textContent = `Nota ${nota} - Concordo Parcialmente (com ressalvas)`;
+            } else {
+                corHex = "#00824A"; // Verde
+                bgHex = "#EBFBEE";
+                div.textContent = `Nota ${nota} - Concordo Totalmente com o relatório`;
+            }
+
+            // Atualiza cores do texto abaixo do slider
+            div.style.color = corHex;
+            div.style.backgroundColor = bgHex;
+
+            // Atualiza o Painel de Resumo lá embaixo
+            if(sumFill && sumVal) {
+                sumFill.style.width = (nota * 10) + "%"; 
+                sumFill.style.backgroundColor = corHex;
+                sumVal.textContent = nota;
+                sumVal.style.color = corHex;
+            }
         }
 
-        const headers = document.querySelectorAll('.accordion-header');
-        headers.forEach(h => h.addEventListener('click', function() {
-            const item = this.parentElement;
-            const content = this.nextElementSibling;
-            const isActive = item.classList.contains('active');
-            document.querySelectorAll('.accordion-item').forEach(i => { i.classList.remove('active'); i.querySelector('.accordion-content').style.maxHeight = null; });
-            if (!isActive) { item.classList.add('active'); content.style.maxHeight = content.scrollHeight + 150 + "px"; }
-        }));
+        desafios.forEach((desafio, index) => {
+            const id = index + 1;
+            const tema = desafio.titulo;
+            const resumo = desafio.resumo;
+            
+            // 1. GERAÇÃO DOS ACORDEÕES
+            const div = document.createElement('div');
+            div.className = 'accordion-item';
+            
+            div.innerHTML = `
+                <button type="button" class="accordion-header">
+                    <span class="accordion-header-title">${id}. ${tema}</span>
+                </button>
+                <div class="accordion-content">
+                    <div class="info-box">
+                        <strong>Síntese do Relatório:</strong> ${resumo}
+                    </div>
 
-        document.getElementById('formDinamica').addEventListener('submit', e => {
+                    <div class="slider-container">
+                        <label for="slider_${id}">Nível de concordância com este diagnóstico (Escala de 1 a 10):</label>
+                        <input type="range" min="1" max="10" step="1" value="5" class="slider" id="slider_${id}" name="concordancia_${id}" oninput="atualizarTextoSlider(this.value, ${id})">
+                        <div class="slider-labels">
+                            <span>1 (Discordo)</span>
+                            <span>5 (Neutro)</span>
+                            <span>10 (Concordo)</span>
+                        </div>
+                        <div class="concordancia-valor" id="texto_slider_${id}" style="color: #E67700; background-color: #FFF9DB;">Nota 5 - Concordo Parcialmente (com ressalvas)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>1. Como podemos sanar, mitigar ou enfrentar este desafio?</label>
+                        <textarea name="enfrentamento_${id}" placeholder="Descreva propostas de soluções, ajustes normativos, capacitação, etc..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>2. O que o DATER/MDA já tem feito em relação a isso?</label>
+                        <textarea name="acoes_dater_${id}" placeholder="Ex: Reestruturações de sistemas (SIATER), eventos de formação, editais vigentes..."></textarea>
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+
+            // 2. GERAÇÃO DO PAINEL DE RESUMO GERAL
+            summaryContainer.innerHTML += `
+                <div class="summary-item">
+                    <div class="summary-item-title">${id}. ${tema}</div>
+                    <div class="summary-item-bar-bg">
+                        <div class="summary-item-bar-fill" id="summary_fill_${id}" style="width: 50%; background-color: #E67700;"></div>
+                    </div>
+                    <div class="summary-item-value" id="summary_val_${id}">5</div>
+                </div>
+            `;
+        });
+
+        // Eventos de abrir e fechar acordeões
+        const headers = document.querySelectorAll('.accordion-header');
+        headers.forEach(header => {
+            header.addEventListener('click', function() {
+                const item = this.parentElement;
+                const content = this.nextElementSibling;
+                const isActive = item.classList.contains('active');
+                
+                document.querySelectorAll('.accordion-item').forEach(i => {
+                    i.classList.remove('active');
+                    i.querySelector('.accordion-content').style.maxHeight = null;
+                });
+
+                if (!isActive) {
+                    item.classList.add('active');
+                    content.style.maxHeight = content.scrollHeight + 150 + "px"; 
+                }
+            });
+        });
+
+        // Lógica de Envio para a Planilha (Com Correção de CORS para não falhar)
+        const form = document.getElementById('formDinamica');
+        const btnSubmit = document.getElementById('btnSubmit');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const successMessage = document.getElementById('successMessage');
+
+        form.addEventListener('submit', e => {
             e.preventDefault();
-            const btn = document.getElementById('btnSubmit');
-            btn.disabled = true;
-            document.getElementById('loadingMessage').style.display = 'block';
-            fetch(scriptURL, { method: 'POST', body: new FormData(e.target), mode: 'no-cors' })
-                .then(() => {
-                    document.getElementById('loadingMessage').style.display = 'none';
-                    document.getElementById('successMessage').style.display = 'block';
-                    e.target.reset();
-                    for(let i=1; i<=9; i++) atualizar(5, i);
-                    setTimeout(() => { btn.disabled = false; document.getElementById('successMessage').style.display = 'none'; }, 5000);
-                }).catch(() => { alert("Erro no envio!"); btn.disabled = false; });
+
+            btnSubmit.disabled = true;
+            loadingMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+
+            // Adicionado mode: 'no-cors' para evitar bloqueio do navegador na integração
+            fetch(scriptURL, { 
+                method: 'POST', 
+                body: new FormData(form),
+                mode: 'no-cors' 
+            })
+            .then(response => {
+                loadingMessage.style.display = 'none';
+                successMessage.style.display = 'block';
+                form.reset(); 
+                
+                // Reseta os valores das barras para 5 após o envio
+                for(let i=1; i<=9; i++) {
+                    atualizarTextoSlider(5, i);
+                }
+                
+                setTimeout(() => {
+                    btnSubmit.disabled = false;
+                    successMessage.style.display = 'none';
+                }, 5000);
+            })
+            .catch(error => {
+                console.error('Erro!', error.message);
+                alert("Ocorreu um erro ao enviar. Tente novamente.");
+                btnSubmit.disabled = false;
+                loadingMessage.style.display = 'none';
+            });
         });
     </script>
 </body>
