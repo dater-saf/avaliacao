@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Interativo: Desafios ATER - MDA</title>
     <style>
-        /* [Manter todo o CSS anterior] */
+        /* [Manter o CSS do código anterior, ele está perfeito] */
         :root { --gov-blue: #1351B4; --gov-blue-dark: #071D41; --gov-green: #00824A; --gov-yellow: #FFCD00; --gov-bg: #F4F6F8; --gov-surface: #FFFFFF; --gov-text: #212529; --gov-text-muted: #6C757D; --gov-border: #DEE2E6; --gov-red: #E16B80; }
         body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: var(--gov-bg); color: var(--gov-text); margin: 0; padding: 0; line-height: 1.6; }
         .linha-topo-azul { background-color: var(--gov-blue); height: 12px; width: 100%; margin: 0; padding: 0; }
@@ -30,7 +30,6 @@
         .slider-container { padding: 20px; border: 1px solid var(--gov-border); border-radius: 8px; margin-bottom: 30px; }
         .slider { -webkit-appearance: none; width: 100%; height: 8px; background: linear-gradient(to right, #E16B80, var(--gov-yellow), var(--gov-green)); border-radius: 4px; outline: none; }
         .slider::-webkit-slider-thumb { -webkit-appearance: none; width: 26px; height: 26px; border-radius: 50%; background: #ffffff; border: 3px solid var(--gov-blue); cursor: pointer; }
-        .slider-labels { display: flex; justify-content: space-between; font-size: 0.85em; font-weight: 600; color: var(--gov-text-muted); }
         .concordancia-valor { text-align: center; font-size: 1.15em; font-weight: 700; color: var(--gov-blue); margin-top: 15px; padding: 8px; background-color: #f8f9fa; border-radius: 4px; }
         .summary-panel { background-color: var(--gov-surface); padding: 30px 25px; border-radius: 8px; border: 1px solid var(--gov-border); margin-top: 40px; border-top: 6px solid var(--gov-green); }
         .btn-submit { display: block; width: 100%; background-color: var(--gov-blue); color: white; border: none; padding: 18px; font-size: 1.2em; font-weight: 700; border-radius: 30px; cursor: pointer; }
@@ -49,29 +48,18 @@
             <h1>Avaliação Estratégica</h1>
             <p>Análise do Relatório Instituto Escolhas: Os Desafios da ATER no Brasil</p>
         </div>
-<div class="info-box" style="background-color: #e6f0eb; border-left: 6px solid var(--gov-blue); padding: 20px; margin-bottom: 30px;">
-    <p style="font-size: 1em; color: var(--gov-text-dark); margin: 0;">
-        Conforme o Estudo <strong>"Por que e como fortalecer a política pública de ATER?" (Relatório técnico parte I)</strong>, elaborado pelo Instituto Escolhas e apresentado em reunião do DATER, convidamos os coordenadores a registrarem suas opiniões e percepções. 
-        Você pode acessar o relatório na íntegra em: 
-        <a href="https://escolhas.org/estudos-e-publicacoes/" target="_blank" style="color: var(--gov-blue); font-weight: bold;">escolhas.org/estudos-e-publicacoes/</a>
-    </p>
-    <p style="font-size: 1em; color: var(--gov-text-dark); margin: 15px 0 0 0;">
-        O objetivo é mapearmos o que podemos fazer frente a estes desafios e o que já está sendo estruturado pelo DATER/MDA no âmbito da PNATER. 
-        <strong>Suas contribuições individuais são fundamentais para o nosso planejamento estratégico.</strong> 
-    </p>
-</div>
+
+        <div class="info-box" style="background-color: #e6f0eb; border-left: 6px solid var(--gov-blue); padding: 20px; margin-bottom: 30px;">
+            <p>Conforme o Estudo <strong>"Por que e como fortalecer a política pública de ATER?"</strong> do Instituto Escolhas, convidamos os coordenadores a registrarem suas percepções. Acesse na íntegra: <a href="https://escolhas.org/estudos-e-publicacoes/" target="_blank">escolhas.org/estudos-e-publicacoes/</a></p>
+            <p><strong>Sua identidade será preservada.</strong> Contribua com o que podemos fazer frente a estes desafios e o que já está sendo estruturado no âmbito da PNATER.</p>
+        </div>
+
         <form id="formDinamica">
             <div class="participant-info">
                 <h3>Identificação</h3>
                 <div class="participant-grid">
-                    <div class="form-group-info">
-                        <label for="Nome">Nome Completo:</label>
-                        <input type="text" id="Nome" name="Nome" required>
-                    </div>
-                    <div class="form-group-info">
-                        <label for="Coordenacao">Coordenação:</label>
-                        <input type="text" id="Coordenacao" name="Coordenacao" required>
-                    </div>
+                    <div class="form-group-info"><label>Nome Completo:</label><input type="text" name="Nome" required></div>
+                    <div class="form-group-info"><label>Coordenação:</label><input type="text" name="Coordenacao" required></div>
                 </div>
             </div>
 
@@ -79,9 +67,7 @@
             
             <div class="comments-section">
                 <h3>Comentários Adicionais</h3>
-                <div class="form-group-info">
-                    <textarea id="comentario" name="comentario" placeholder="Gostaria de deixar alguma observação geral?"></textarea>
-                </div>
+                <div class="form-group-info"><textarea name="comentario" placeholder="Escreva suas observações gerais aqui..."></textarea></div>
             </div>
 
             <div class="summary-panel">
@@ -94,20 +80,21 @@
     </div>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxj3AFKyGOqdLmiyb_IezAVbSMx97wyms2wd5BbuQ6-FKekf4wwhTLhol2zqTfcO4Ue/exec'; 
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxBq03I0u9hgTNPoArvAT1gxiV1MqcQmNvVgk45TC-AeWnR-JgbY14FOsslsd1J2gCY/exec'; 
 
         const desafiosData = [
-            { titulo: "Marco Legal", resumo: "Embora a PNATER tenha estabelecido bases sólidas, há divergências sobre seu escopo e falta de mecanismos permanentes de financiamento. Destacam-se a fragilidade institucional da participação social e a ausência de dispositivos explícitos de coordenação entre os entes federados e com outras políticas públicas." },
-            { titulo: "Conjuntura política", resumo: "A política de ATER é altamente sensível às transições governamentais. Mudanças de gestão resultam frequentemente em descontinuidades programáticas, reestruturações administrativas frequentes e oscilações orçamentárias, o que impede a consolidação de estratégias de longo prazo." },
-            { titulo: "Recursos federais", resumo: "O volume de recursos federais destinados à ATER é considerado baixo e instável. O financiamento da extensão rural no Brasil depende majoritariamente do esforço orçamentário dos estados, sendo a participação direta da União limitada e errática." },
-            { titulo: "Capacidade estatal", resumo: "Existem fragilidades institucionais, organizacionais e burocráticas tanto no MDA quanto na ANATER. Destacam-se a excessiva burocratização, fragilidade política e organizacional, insuficiência de pessoal e uma relação tensa entre esses órgãos." },
-            { titulo: "Mecanismos de implantação", resumo: "A dependência excessiva de chamadas públicas gera contratos de curta duração que impedem a continuidade do atendimento. Há disputas sobre abordagens (produtivismo vs. multidimensional), fragmentação da coordenação interfederativa e participação social que muitas vezes é apenas consultiva." },
-            { titulo: "Desigualdade na oferta", resumo: "Existe um déficit estrutural de oferta, com baixa cobertura territorial e desigualdades de acesso que penalizam agricultores mais vulneráveis. Há vazios territoriais (especialmente no Norte) e barreiras fundiárias que excluem diversos agricultores." },
-            { titulo: "Trabalhadores e condições de trabalho", resumo: "Falta força de trabalho suficiente. Somam-se o envelhecimento dos quadros, precarização (baixa remuneração, logística precária, excesso de burocracia), desigualdades de gênero e currículos de formação inicial pouco alinhados à agricultura familiar e agroecologia." },
-            { titulo: "Inovação tecnológica", resumo: "Há uma desconexão entre instituições de pesquisa e entidades de ATER. A falta de recursos impede investimentos em inovação, a adoção de tecnologias digitais é incipiente e experiências de inovação social carecem de apoio institucional." },
-            { titulo: "Monitoramento e avaliação", resumo: "Este campo é pouco desenvolvido. A política carece de séries históricas e indicadores robustos para avaliar impactos, os sistemas são fragmentados entre instituições e não existem estruturas dedicadas de M&A para orientar decisões." }
+            { titulo: "Marco Legal", resumo: "A Política Nacional de ATER possui divergências sobre seu escopo, com alguns avaliando-a como muito complexa. Não há mecanismos para garantir um financiamento permanente, gerando forte instabilidade. O desenho institucional da participação social é frágil, dependendo de conselhos instáveis. Faltam, ainda, dispositivos legais explícitos que promovam a coordenação entre órgãos federais, estados e municípios, além da frágil integração com outras políticas públicas." },
+            { titulo: "Conjuntura Política", resumo: "A execução da política de ATER é altamente sensível a mudanças de governo. As transições frequentemente resultam em reconfigurações das prioridades, gerando profundas descontinuidades programáticas, constantes reestruturações administrativas e fortes variações orçamentárias. Essa instabilidade crônica prejudica a previsibilidade das ações e o atendimento contínuo aos agricultores." },
+            { titulo: "Recursos Federais", resumo: "O volume de recursos federais destinados à ATER é historicamente reduzido e sofre forte instabilidade, mantendo-se abaixo dos níveis pré-pandemia. O financiamento depende massivamente dos estados, com o gasto direto da União sendo menor que as despesas de algumas empresas estaduais isoladas. O orçamento transita por diversos ministérios e autarquias conforme o governo, evidenciando instabilidade institucional." },
+            { titulo: "Capacidades Estatais", resumo: "A implementação da política enfrenta fragilidades institucionais, operacionais e políticas severas no MDA e na ANATER. O ministério sofre com escassez de pessoal e vulnerabilidade política, enquanto a agência é criticada pelo foco excessivo em processos burocráticos de editais. A relação tensionada entre ambos prejudica a coordenação estratégica." },
+            { titulo: "Mecanismos de Implementação", resumo: "As chamadas públicas, principal instrumento da política, induzem contratos de curta duração que dificultam o atendimento contínuo. Há disputas sobre as abordagens, com críticas à persistência do viés produtivista em detrimento de visões agroecológicas. Observa-se fragmentação na coordenação interfederativa e participação social que funciona mais para validação de decisões do que para construção coletiva." },
+            { titulo: "Desigualdades na Oferta", resumo: "A cobertura de ATER no Brasil apresenta déficit estrutural significativo, deixando cerca de 80% dos estabelecimentos sem assistência. O acesso penaliza os agricultores mais vulneráveis, que enfrentam barreiras documentais. Observam-se vazios territoriais crônicos, particularmente na região Norte. Além disso, produtores integrados recebem serviços focados apenas na produção, ignorando a necessária diversificação de renda." },
+            { titulo: "Trabalhadores e Condições de Trabalho", resumo: "Existe um déficit estrutural de trabalhadores para atender a demanda nacional. O quadro do setor público sofre com o envelhecimento e a falta de concursos. Profissionais enfrentam condições precárias, como baixa remuneração e infraestrutura logística deficiente. Há forte desigualdade de gênero e os currículos de formação inicial continuam orientados à agricultura de larga escala, negligenciando a agricultura familiar e agroecologia." },
+            { titulo: "Inovação e Tecnologia", resumo: "Evidencia-se uma desconexão estrutural entre as instituições de pesquisa (como a Embrapa) e as entidades que ofertam ATER. Os parcos recursos das entidades estaduais são consumidos pela manutenção institucional, limitando investimentos na difusão de novas tecnologias. A adoção de ferramentas digitais esbarra na falta de conectividade. Experiências territoriais de inovação social recebem pouco reconhecimento e financiamento." },
+            { titulo: "Monitoramento e Avaliação", resumo: "O monitoramento e a avaliação são áreas pouco desenvolvidas. A política sofre com a escassez de dados robustos, séries históricas e indicadores padronizados que permitam medir impactos socioeconômicos reais. As métricas existentes são simplificadas e fragmentadas. Faltam estruturas e equipes dedicadas à análise institucional, limitando o aprendizado e a formulação de diretrizes baseadas em evidências sólidas." }
         ];
 
+        // [O restante do script de renderização e envio permanece igual]
         const container = document.getElementById('accordion-container');
         const summaryContainer = document.getElementById('summary-content');
 
@@ -123,7 +110,7 @@
                             <input type="range" min="1" max="10" step="1" value="5" class="slider" name="concordancia_${id}" oninput="atualizar(this.value, ${id})">
                             <div class="concordancia-valor" id="val_${id}">Nota 5 - Concordo Parcialmente</div>
                         </div>
-                        <div class="form-group"><label>Como enfrentar este desafio?</label><textarea name="enfrentamento_${id}"></textarea></div>
+                        <div class="form-group"><label>Como podemos sanar, mitigar ou enfrentar este desafio?</label><textarea name="enfrentamento_${id}"></textarea></div>
                         <div class="form-group"><label>O que o DATER já faz?</label><textarea name="acoes_dater_${id}"></textarea></div>
                     </div>
                 </div>`;
@@ -142,8 +129,29 @@
             txt.textContent = n; txt.style.color = cor;
         }
 
-        // Lógica de abrir/fechar e envio (mesma anterior)
-        // ... (resto do script)
+        const headers = document.querySelectorAll('.accordion-header');
+        headers.forEach(h => h.addEventListener('click', function() {
+            const item = this.parentElement;
+            const content = this.nextElementSibling;
+            const isActive = item.classList.contains('active');
+            document.querySelectorAll('.accordion-item').forEach(i => { i.classList.remove('active'); i.querySelector('.accordion-content').style.maxHeight = null; });
+            if (!isActive) { item.classList.add('active'); content.style.maxHeight = content.scrollHeight + 150 + "px"; }
+        }));
+
+        document.getElementById('formDinamica').addEventListener('submit', e => {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmit');
+            btn.disabled = true;
+            document.getElementById('loadingMessage').style.display = 'block';
+            fetch(scriptURL, { method: 'POST', body: new FormData(e.target), mode: 'no-cors' })
+                .then(() => {
+                    document.getElementById('loadingMessage').style.display = 'none';
+                    document.getElementById('successMessage').style.display = 'block';
+                    e.target.reset();
+                    for(let i=1; i<=9; i++) atualizar(5, i);
+                    setTimeout(() => { btn.disabled = false; document.getElementById('successMessage').style.display = 'none'; }, 5000);
+                }).catch(() => { alert("Erro no envio!"); btn.disabled = false; });
+        });
     </script>
 </body>
 </html>
