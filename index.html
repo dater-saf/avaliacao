@@ -260,7 +260,7 @@
             box-shadow: 0 0 0 3px rgba(19, 81, 180, 0.15);
         }
 
-        /* Slider Customizado */
+        /* Slider Customizado - Escala de 10 */
         .slider-container {
             padding: 10px 0;
             background-color: #fff;
@@ -433,9 +433,9 @@
 
     <script>
         // =========================================================
-        // ATENÇÃO: COLE AQUI A URL GERADA NO GOOGLE APPS SCRIPT
+        // URL DO GOOGLE APPS SCRIPT CONFIGURADA
         // =========================================================
-        const scriptURL = 'COLE_AQUI_A_SUA_URL_DO_APP_SCRIPT'; 
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxBq03I0u9hgTNPoArvAT1gxiV1MqcQmNvVgk45TC-AeWnR-JgbY14FOsslsd1J2gCY/exec'; 
 
         const desafios = [
             "Marco Legal",
@@ -451,18 +451,21 @@
 
         const container = document.getElementById('accordion-container');
 
+        // Função ajustada para escala de 1 a 10
         function atualizarTextoSlider(valor, id) {
             const div = document.getElementById(`texto_slider_${id}`);
-            if (valor < 35) {
-                div.textContent = "Discordo do diagnóstico apresentado";
+            const nota = parseInt(valor);
+            
+            if (nota <= 3) {
+                div.textContent = `Nota ${nota} - Discordo do diagnóstico`;
                 div.style.color = "#C92A2A"; 
                 div.style.backgroundColor = "#FFF5F5";
-            } else if (valor < 65) {
-                div.textContent = "Concordo Parcialmente (com ressalvas)";
+            } else if (nota <= 7) {
+                div.textContent = `Nota ${nota} - Concordo Parcialmente (com ressalvas)`;
                 div.style.color = "#E67700"; 
                 div.style.backgroundColor = "#FFF9DB";
             } else {
-                div.textContent = "Concordo Totalmente com o relatório";
+                div.textContent = `Nota ${nota} - Concordo Totalmente com o relatório`;
                 div.style.color = "#00824A"; 
                 div.style.backgroundColor = "#EBFBEE";
             }
@@ -481,14 +484,14 @@
                     </div>
 
                     <div class="slider-container">
-                        <label for="slider_${id}">Nível de concordância com este diagnóstico:</label>
-                        <input type="range" min="0" max="100" value="50" class="slider" id="slider_${id}" name="concordancia_${id}" oninput="atualizarTextoSlider(this.value, ${id})">
+                        <label for="slider_${id}">Nível de concordância com este diagnóstico (Escala de 1 a 10):</label>
+                        <input type="range" min="1" max="10" step="1" value="5" class="slider" id="slider_${id}" name="concordancia_${id}" oninput="atualizarTextoSlider(this.value, ${id})">
                         <div class="slider-labels">
-                            <span>Discordo</span>
-                            <span>Neutro</span>
-                            <span>Concordo</span>
+                            <span>1 (Discordo)</span>
+                            <span>5 (Neutro)</span>
+                            <span>10 (Concordo)</span>
                         </div>
-                        <div class="concordancia-valor" id="texto_slider_${id}" style="color: #E67700; background-color: #FFF9DB;">Concordo Parcialmente (com ressalvas)</div>
+                        <div class="concordancia-valor" id="texto_slider_${id}" style="color: #E67700; background-color: #FFF9DB;">Nota 5 - Concordo Parcialmente (com ressalvas)</div>
                     </div>
 
                     <div class="form-group">
@@ -533,11 +536,6 @@
 
         form.addEventListener('submit', e => {
             e.preventDefault();
-            
-            if (scriptURL === 'https://script.google.com/macros/s/AKfycbxBq03I0u9hgTNPoArvAT1gxiV1MqcQmNvVgk45TC-AeWnR-JgbY14FOsslsd1J2gCY/exec') {
-                alert("Atenção: Você precisa colar a URL do Google Apps Script no código HTML para que o envio funcione.");
-                return;
-            }
 
             btnSubmit.disabled = true;
             loadingMessage.style.display = 'block';
@@ -549,8 +547,9 @@
                     successMessage.style.display = 'block';
                     form.reset(); 
                     
+                    // Reseta os valores das barras para 5 após o envio
                     for(let i=1; i<=9; i++) {
-                        atualizarTextoSlider(50, i);
+                        atualizarTextoSlider(5, i);
                     }
                     
                     setTimeout(() => {
