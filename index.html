@@ -99,8 +99,8 @@
             margin: 0 auto;
         }
 
-        /* Dados do Participante */
-        .participant-info {
+        /* Dados do Participante e Comentários */
+        .participant-info, .comments-section {
             background-color: var(--gov-surface);
             padding: 25px;
             border-radius: 8px;
@@ -110,7 +110,12 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
 
-        .participant-info h3 {
+        .comments-section {
+            border-left: 6px solid var(--gov-yellow);
+            margin-top: 30px;
+        }
+
+        .participant-info h3, .comments-section h3 {
             margin-top: 0;
             color: var(--gov-blue-dark);
             margin-bottom: 20px;
@@ -129,7 +134,7 @@
             color: var(--gov-blue-dark);
         }
 
-        .form-group-info input {
+        .form-group-info input, .form-group-info textarea {
             width: 100%;
             padding: 12px;
             border: 1px solid var(--gov-border);
@@ -141,7 +146,12 @@
             transition: border-color 0.2s;
         }
 
-        .form-group-info input:focus {
+        .form-group-info textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group-info input:focus, .form-group-info textarea:focus {
             outline: none;
             border-color: var(--gov-blue);
             background-color: #fff;
@@ -496,6 +506,15 @@
 
             <div id="accordion-container"></div>
             
+            <!-- NOVA SESSÃO DE COMENTÁRIOS -->
+            <div class="comments-section">
+                <h3>Comentários Adicionais</h3>
+                <div class="form-group-info">
+                    <label for="comentario">Gostaria de deixar alguma observação geral, crítica ou sugestão sobre o relatório?</label>
+                    <textarea id="comentario" name="comentario" placeholder="Escreva seus comentários finais aqui..."></textarea>
+                </div>
+            </div>
+
             <!-- PAINEL DE RESUMO -->
             <div class="summary-panel" id="summary-panel">
                 <h3>Visão Geral da sua Concordância</h3>
@@ -509,7 +528,8 @@
     </div>
 
     <script>
-        const scriptURL = "https://script.google.com/macros/s/AKfycbxhUi5pdg3qIlapw1_tJSuoKYn_rCpdNnwS1dIjqThAt3Rr1i_wTET256DmcFZVFE6K/exec"; 
+        // URL DO SEU APPS SCRIPT
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyUwdSQczw_WN8r8BJ055aSXozM-pGaYhuaeqbnujz32Hdv-bee-ir-netekSzCRf8g/exec'; 
 
         const desafios = [
             "Marco Legal",
@@ -557,7 +577,7 @@
 
             // Atualiza o Painel de Resumo lá embaixo
             if(sumFill && sumVal) {
-                sumFill.style.width = (nota * 10) + "%"; // 10 = 100%, 5 = 50%
+                sumFill.style.width = (nota * 10) + "%"; 
                 sumFill.style.backgroundColor = corHex;
                 sumVal.textContent = nota;
                 sumVal.style.color = corHex;
@@ -636,7 +656,7 @@
             });
         });
 
-        // Lógica de Envio para a Planilha
+        // Lógica de Envio para a Planilha (Com Correção de CORS para não falhar)
         const form = document.getElementById('formDinamica');
         const btnSubmit = document.getElementById('btnSubmit');
         const loadingMessage = document.getElementById('loadingMessage');
@@ -649,28 +669,33 @@
             loadingMessage.style.display = 'block';
             successMessage.style.display = 'none';
 
-            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-                .then(response => {
-                    loadingMessage.style.display = 'none';
-                    successMessage.style.display = 'block';
-                    form.reset(); 
-                    
-                    // Reseta tudo para 5 após o envio
-                    for(let i=1; i<=9; i++) {
-                        atualizarTextoSlider(5, i);
-                    }
-                    
-                    setTimeout(() => {
-                        btnSubmit.disabled = false;
-                        successMessage.style.display = 'none';
-                    }, 5000);
-                })
-                .catch(error => {
-                    console.error('Erro!', error.message);
-                    alert("Ocorreu um erro ao enviar. Tente novamente.");
+            // Adicionado mode: 'no-cors' para evitar bloqueio do navegador na integração
+            fetch(scriptURL, { 
+                method: 'POST', 
+                body: new FormData(form),
+                mode: 'no-cors' 
+            })
+            .then(response => {
+                loadingMessage.style.display = 'none';
+                successMessage.style.display = 'block';
+                form.reset(); 
+                
+                // Reseta os valores das barras para 5 após o envio
+                for(let i=1; i<=9; i++) {
+                    atualizarTextoSlider(5, i);
+                }
+                
+                setTimeout(() => {
                     btnSubmit.disabled = false;
-                    loadingMessage.style.display = 'none';
-                });
+                    successMessage.style.display = 'none';
+                }, 5000);
+            })
+            .catch(error => {
+                console.error('Erro!', error.message);
+                alert("Ocorreu um erro ao enviar. Tente novamente.");
+                btnSubmit.disabled = false;
+                loadingMessage.style.display = 'none';
+            });
         });
     </script>
 </body>
